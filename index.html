@@ -7,7 +7,7 @@
 <style>
   /* Baloo 2 — pełna obsługa polskich liter */
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@400;700;900&display=swap');
-
+ 
   :root {
     --sky: #87CEEB; --sun: #FFD700; --grass: #4CAF50; --pink: #FF6B9D;
     --purple: #A855F7; --orange: #FF8C00; --teal: #00BCD4;
@@ -19,14 +19,14 @@
     background:linear-gradient(180deg,#87CEEB 0%,#B0E0FF 60%,#90EE90 100%);
     min-height:100vh; overflow:hidden; user-select:none;
   }
-
+ 
   .screen { position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center; }
   .screen.active { display:flex; }
-
+ 
   .stars { position:fixed;inset:0;pointer-events:none;z-index:0; }
   .star { position:absolute;width:8px;height:8px;background:var(--yellow);border-radius:50%;animation:twinkle 2s infinite alternate; }
   @keyframes twinkle { from{opacity:.3;transform:scale(.8)} to{opacity:1;transform:scale(1.2)} }
-
+ 
   #startScreen { background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);z-index:10; }
   .start-title {
     font-family:'Baloo 2',cursive;
@@ -35,20 +35,36 @@
     text-align:center;animation:bounce 1s ease infinite alternate;margin-bottom:20px;
   }
   @keyframes bounce { from{transform:translateY(0)} to{transform:translateY(-15px)} }
-  .emoji-row { font-size:3rem;margin:20px 0;animation:spin-slow 6s linear infinite;display:flex;gap:15px; }
-  @keyframes spin-slow { from{transform:rotate(-5deg)} to{transform:rotate(5deg)} }
+  /* Wahadło: alternate zamiast linear — płynnie w obie strony */
+  .emoji-row { font-size:3rem;margin:20px 0;animation:pendulum 3s ease-in-out infinite alternate;display:flex;gap:15px; }
+  @keyframes pendulum { from{transform:rotate(-12deg)} to{transform:rotate(12deg)} }
+ 
+  /* Przyciski trudności */
+  .diff-row { display:flex;gap:8px;margin:16px 0 4px;flex-wrap:nowrap; }
+  .diff-btn {
+    font-family:'Baloo 2',cursive;font-size:.95rem;padding:8px 14px;
+    background:rgba(255,255,255,.18);color:rgba(255,255,255,.85);border:2px solid rgba(255,255,255,.35);
+    border-radius:30px;cursor:pointer;transition:all .15s;white-space:nowrap;
+  }
+  .diff-btn:hover { background:rgba(255,255,255,.32);color:white; }
+  .diff-btn.active {
+    background:rgba(255,255,255,.95);color:#764ba2;border-color:white;
+    font-weight:900;box-shadow:0 3px 10px rgba(0,0,0,.25);
+  }
+ 
   .start-btn {
-    font-family:'Baloo 2',cursive;font-size:2rem;padding:20px 60px;
+    font-family:'Baloo 2',cursive;font-size:2rem;
+    padding:18px 60px;
     background:linear-gradient(135deg,#FFD700,#FF8C00);color:white;border:none;
     border-radius:50px;cursor:pointer;
     box-shadow:0 8px 0 #C45C00,0 10px 20px rgba(0,0,0,.3);
-    transition:transform .1s,box-shadow .1s;margin-top:30px;
+    transition:transform .1s,box-shadow .1s;margin-top:16px;
     text-shadow:2px 2px 0 rgba(0,0,0,.2);
   }
   .start-btn:hover  { transform:translateY(-3px);box-shadow:0 11px 0 #C45C00,0 15px 25px rgba(0,0,0,.3); }
   .start-btn:active { transform:translateY(5px);box-shadow:0 3px 0 #C45C00; }
-  .best-score { color:rgba(255,255,255,.8);font-size:1.3rem;margin-top:20px;font-weight:700; }
-
+  .best-score { color:rgba(255,255,255,.8);font-size:1.3rem;margin-top:16px;font-weight:700; }
+ 
   #hud {
     position:fixed;top:0;left:0;right:0;padding:12px 20px;
     display:flex;align-items:center;justify-content:space-between;
@@ -66,12 +82,12 @@
   }
   .progress-bar-wrap { height:10px;width:200px;background:#E5E7EB;border-radius:5px;overflow:hidden;margin-top:4px; }
   .progress-bar { height:100%;background:linear-gradient(90deg,var(--green),var(--teal));border-radius:5px;transition:width .3s; }
-
+ 
   #level1Screen { background:linear-gradient(180deg,#87CEEB 0%,#B8E4FF 70%,#90EE90 100%);z-index:5; }
   .game-area { position:fixed;top:80px;bottom:0;left:0;right:0;overflow:hidden; }
   .cloud { position:absolute;font-size:3rem;opacity:.6;animation:drift linear infinite;pointer-events:none; }
   @keyframes drift { from{transform:translateX(-200px)} to{transform:translateX(calc(100vw + 200px))} }
-
+ 
   .falling-word { position:absolute;left:50%;transform:translateX(-50%);text-align:center;z-index:20; }
   .word-display {
     font-family:'Baloo 2',cursive;font-size:clamp(3.5rem,8vw,5.5rem);
@@ -90,17 +106,17 @@
   }
   .word-emoji { font-size:3rem;display:block;text-align:center;margin-bottom:5px;animation:floatAnim 1.5s ease infinite alternate; }
   @keyframes floatAnim { from{transform:translateY(0) rotate(-5deg)} to{transform:translateY(-8px) rotate(5deg)} }
-
+ 
   .altgr-hint {
     font-family:'Baloo 2',cursive;font-size:.95rem;
     color:rgba(255,220,0,.95);background:rgba(0,0,0,.45);
     border-radius:10px;padding:3px 12px;margin-top:6px;
     text-align:center;min-height:1.6em;transition:opacity .2s;
   }
-
+ 
   .flash-red { position:fixed;inset:0;background:rgba(255,0,0,.25);pointer-events:none;z-index:999;animation:flash-out .3s forwards; }
   @keyframes flash-out { from{opacity:1} to{opacity:0} }
-
+ 
   .ground {
     position:fixed;bottom:0;left:0;right:0;height:60px;
     background:linear-gradient(180deg,#4CAF50,#2E7D32);border-top:6px solid #388E3C;
@@ -108,7 +124,7 @@
   }
   .ground-item { font-size:1.8rem;animation:ground-bounce .5s ease infinite alternate; }
   @keyframes ground-bounce { from{transform:translateY(0)} to{transform:translateY(-5px)} }
-
+ 
   #level2Screen { background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);z-index:5; }
   .basket {
     position:fixed;width:110px;height:110px;border-radius:20px;border:6px solid;
@@ -121,8 +137,7 @@
   #basket-blue   { top:90px;right:20px;border-color:#60A5FA;background:rgba(96,165,250,.15);color:#60A5FA;box-shadow:0 0 20px rgba(96,165,250,.3); }
   #basket-green  { bottom:70px;left:20px;border-color:#4ADE80;background:rgba(74,222,128,.15);color:#4ADE80;box-shadow:0 0 20px rgba(74,222,128,.3); }
   #basket-yellow { bottom:70px;right:20px;border-color:#FACC15;background:rgba(250,204,21,.15);color:#FACC15;box-shadow:0 0 20px rgba(250,204,21,.3); }
-
-  /* ikony +30%: było 3.5rem → 4.55rem */
+ 
   .falling-icon {
     position:absolute;font-size:4.55rem;cursor:grab;z-index:60;
     transition:filter .2s;touch-action:none;
@@ -133,10 +148,10 @@
   /* pierścień +30%: było 70px → 91px */
   .icon-ring {
     position:absolute;width:91px;height:91px;border-radius:50%;border:4px solid;
-    top:-13px;left:-10px;pointer-events:none;animation:pulse-ring 1s ease infinite alternate;
+    top:-13px;left:-7px;pointer-events:none;animation:pulse-ring 1s ease infinite alternate;
   }
   @keyframes pulse-ring { from{opacity:.6} to{opacity:1} }
-
+ 
   #transitionScreen { background:linear-gradient(135deg,#f093fb,#f5576c);z-index:20; }
   .transition-title {
     font-family:'Baloo 2',cursive;font-size:clamp(2.5rem,7vw,5rem);color:white;
@@ -157,7 +172,7 @@
   }
   .continue-btn:hover  { transform:translateY(-3px); }
   .continue-btn:active { transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.2); }
-
+ 
   #endScreen { background:linear-gradient(135deg,#1a1a2e,#764ba2);z-index:20; }
   .end-title {
     font-family:'Baloo 2',cursive;font-size:clamp(3rem,8vw,6rem);
@@ -167,19 +182,19 @@
   }
   .final-score { font-family:'Baloo 2',cursive;font-size:5rem;color:var(--yellow);text-shadow:0 0 30px rgba(255,215,0,.8);margin:20px 0; }
   .highscore-label { font-family:'Baloo 2',cursive;font-size:2rem;color:#FF6B9D;text-shadow:0 0 15px rgba(255,107,157,.8); }
-
+ 
   .points-popup {
     position:fixed;font-family:'Baloo 2',cursive;font-size:2.5rem;
     pointer-events:none;z-index:300;animation:float-up 1.2s ease forwards;
   }
   @keyframes float-up { 0%{transform:translateY(0) scale(1);opacity:1} 100%{transform:translateY(-100px) scale(1.5);opacity:0} }
-
+ 
   .confetti-piece {
     position:fixed;width:12px;height:12px;pointer-events:none;z-index:400;
     animation:confetti-fall linear forwards;border-radius:2px;
   }
   @keyframes confetti-fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
-
+ 
   @media(max-width:600px){
     .word-display{font-size:2.5rem} .letter-box{min-width:38px;padding:3px 5px}
     .basket{width:80px;height:80px;font-size:2rem} .falling-icon{font-size:3.64rem}
@@ -188,18 +203,26 @@
 </style>
 </head>
 <body>
-
+ 
 <div id="startScreen" class="screen active">
   <div class="stars" id="bgStars"></div>
   <div class="start-title">🌟 SuperGra 🌟</div>
   <div class="emoji-row">🍎 🐶 🌸 🦋 🍕 🚀 🦁 🍓</div>
   <p style="color:rgba(255,255,255,.9);font-size:1.3rem;font-weight:700;text-align:center;max-width:400px;padding:0 20px;line-height:1.6;">
-    Wpisuj litery 🔤<br>Przeciągaj ikony 🎯<br>Zbieraj punkty ⭐
+    Wpisuj litery 🔤&nbsp; Przeciągaj ikony 🎯&nbsp; Zbieraj punkty ⭐
   </p>
+  <!-- Poziomy trudności -->
+  <div class="diff-row" id="diffRow">
+    <button class="diff-btn" data-diff="0" onclick="setDiff(0)">🐢 Bardzo łatwy</button>
+    <button class="diff-btn" data-diff="1" onclick="setDiff(1)">🌱 Łatwy</button>
+    <button class="diff-btn active" data-diff="2" onclick="setDiff(2)">⚡ Normalny</button>
+    <button class="diff-btn" data-diff="3" onclick="setDiff(3)">🔥 Specjalista</button>
+    <button class="diff-btn" data-diff="4" onclick="setDiff(4)">💀 Mistrz</button>
+  </div>
   <button class="start-btn" onclick="startGame()">▶ GRAJ!</button>
   <div class="best-score" id="bestScoreDisplay">🏆 Rekord: 0 pkt</div>
 </div>
-
+ 
 <div id="hud" style="display:none;">
   <div class="hud-block">
     <div class="hud-label">Punkty</div>
@@ -216,7 +239,7 @@
     <div class="hud-value" id="hudRound">1/3</div>
   </div>
 </div>
-
+ 
 <div id="level1Screen" class="screen">
   <div class="game-area" id="gameArea1">
     <div class="cloud" style="top:15%;animation-duration:25s;animation-delay:-10s;font-size:4rem;">☁️</div>
@@ -236,7 +259,7 @@
     <span class="ground-item" style="animation-delay:.7s">🌷</span>
   </div>
 </div>
-
+ 
 <div id="level2Screen" class="screen">
   <div id="spaceBg"></div>
   <div class="basket" id="basket-red">🧺<div class="basket-label">CZERWONY</div></div>
@@ -249,7 +272,7 @@
     <span style="font-size:1.5rem">🌟</span><span style="font-size:1.5rem">💫</span>
   </div>
 </div>
-
+ 
 <div id="transitionScreen" class="screen">
   <div class="transition-title" id="transitionTitle">Świetnie! 🎉</div>
   <div class="transition-emoji" id="transitionEmoji">🏆</div>
@@ -257,21 +280,34 @@
   <div style="color:rgba(255,255,255,.8);font-size:1.2rem;font-weight:700;" id="transitionNext"></div>
   <button class="continue-btn" onclick="continueGame()">Dalej ➡️</button>
 </div>
-
+ 
 <div id="endScreen" class="screen">
   <div class="end-title">🎊 KONIEC GRY! 🎊</div>
   <div style="color:rgba(255,255,255,.7);font-size:1.5rem;font-weight:700;margin-top:10px;">Twój wynik:</div>
   <div class="final-score" id="finalScore">0</div>
   <div class="highscore-label" id="newRecordLabel" style="display:none;">🏆 NOWY REKORD! 🏆</div>
   <div style="color:rgba(255,255,255,.7);font-size:1.2rem;margin-top:10px;" id="bestScoreEnd"></div>
-  <button class="start-btn" onclick="startGame()" style="margin-top:30px;">🔄 Zagraj ponownie</button>
+  <button class="start-btn" onclick="goToStart()" style="margin-top:30px;">🔄 Zagraj ponownie</button>
 </div>
-
+ 
 <script>
 // =====================
 // GAME DATA (małe litery)
 // =====================
 const WORDS = [
+  {word:'zebra',emoji:'🦓'},{word:'krowa',emoji:'🐄'},{word:'świnia',emoji:'🐷'},
+  {word:'kaczka',emoji:'🦆'},{word:'rybka',emoji:'🐟'},{word:'wieloryb',emoji:'🐳'},
+  {word:'delfin',emoji:'🐬'},{word:'rekin',emoji:'🦈'},{word:'żółwik',emoji:'🐢'},
+  {word:'ślimak',emoji:'🐌'},{word:'pająk',emoji:'🕷️'},{word:'biedronka',emoji:'🐞'},
+  {word:'krokodyl',emoji:'🐊'},{word:'pingwin',emoji:'🐧'},{word:'kangur',emoji:'🦘'},
+  {word:'królik',emoji:'🐰'},{word:'wiewiórka',emoji:'🐿️'},{word:'arbuz',emoji:'🍉'},
+  {word:'cytryna',emoji:'🍋'},{word:'ananas',emoji:'🍍'},{word:'marchewka',emoji:'🥕'},
+  {word:'pomidor',emoji:'🍅'},{word:'ogórek',emoji:'🥒'},{word:'winogrona',emoji:'🍇'},
+  {word:'pomarańcza',emoji:'🍊'},{word:'chleb',emoji:'🍞'},{word:'samochód',emoji:'🚗'},
+  {word:'rower',emoji:'🚲'},{word:'samolot',emoji:'✈️'},{word:'statek',emoji:'🚢'},
+  {word:'pociąg',emoji:'🚆'},{word:'księżyc',emoji:'🌙'},{word:'chmura',emoji:'☁️'},
+  {word:'piłka',emoji:'⚽'},{word:'gitara',emoji:'🎸'},{word:'korona',emoji:'👑'},
+  {word:'prezent',emoji:'🎁'},{word:'dinozaur',emoji:'🦕'},{word:'jednorożec',emoji:'🦄'},
   {word:'kot',emoji:'🐱'},{word:'pies',emoji:'🐶'},{word:'kura',emoji:'🐔'},
   {word:'ryś',emoji:'🐱'},{word:'koń',emoji:'🐴'},{word:'lew',emoji:'🦁'},
   {word:'pszczoła',emoji:'🐝'},{word:'orzeł',emoji:'🦅'},{word:'żaba',emoji:'🐸'},
@@ -284,19 +320,47 @@ const WORDS = [
   {word:'rakieta',emoji:'🚀'},{word:'robot',emoji:'🤖'},{word:'balon',emoji:'🎈'},
   {word:'słonik',emoji:'🐘'},{word:'żyrafa',emoji:'🦒'},{word:'tygrys',emoji:'🐯'},
   {word:'papuga',emoji:'🦜'},{word:'kotek',emoji:'😺'},{word:'miś',emoji:'🐻'},
+  {word:'kaktus',emoji:'🌵'},
 ];
-
+ 
 const LEVEL2_ICONS = [
   {emoji:'🍎',color:'red'},{emoji:'🌹',color:'red'},{emoji:'🍒',color:'red'},
   {emoji:'🦞',color:'red'},{emoji:'🎈',color:'red'},{emoji:'🏮',color:'red'},
-  {emoji:'🫐',color:'blue'},{emoji:'💎',color:'blue'},{emoji:'🧿',color:'blue'},
-  {emoji:'🫧',color:'blue'},{emoji:'🔵',color:'blue'},{emoji:'💙',color:'blue'},
+   {emoji:'🍓',color:'red'},{emoji:'🍅',color:'red'},{emoji:'🍄',color:'red'},
+  {emoji:'🐞',color:'red'},{emoji:'❤️',color:'red'},{emoji:'🚒',color:'red'},
   {emoji:'🍀',color:'green'},{emoji:'🌵',color:'green'},{emoji:'🥦',color:'green'},
   {emoji:'🌿',color:'green'},{emoji:'🐸',color:'green'},{emoji:'💚',color:'green'},
+  {emoji:'🥒',color:'green'},{emoji:'🐢',color:'green'},{emoji:'🐊',color:'green'},
+  {emoji:'🌳',color:'green'},{emoji:'🥝',color:'green'},{emoji:'🍏',color:'green'},
+  {emoji:'☀️',color:'yellow'},{emoji:'🌙',color:'yellow'},{emoji:'🧀',color:'yellow'},
+  {emoji:'🐥',color:'yellow'},{emoji:'🍍',color:'yellow'},{emoji:'🌽',color:'yellow'},
   {emoji:'⭐',color:'yellow'},{emoji:'🌟',color:'yellow'},{emoji:'🍌',color:'yellow'},
   {emoji:'🌻',color:'yellow'},{emoji:'🐤',color:'yellow'},{emoji:'🍋',color:'yellow'},
+  {emoji:'🫐',color:'blue'},{emoji:'💎',color:'blue'},{emoji:'🧿',color:'blue'},
+  {emoji:'🫧',color:'blue'},{emoji:'🔵',color:'blue'},{emoji:'💙',color:'blue'},
+  {emoji:'🐳',color:'blue'},{emoji:'🐋',color:'blue'}{emoji:'🌀',color:'blue'},
+  {emoji:'🧢',color:'blue'},{emoji:'🌊',color:'blue'},{emoji:'👖',color:'blue'},
 ];
-
+ 
+// =====================
+// DIFFICULTY
+// =====================
+const DIFF_MULT = [0.70, 1.00, 1.15, 1.30, 1.45];
+let selectedDiff = 2;
+ 
+function setDiff(idx) {
+  selectedDiff = idx;
+  localStorage.setItem('supergraDiff', idx);
+  document.querySelectorAll('.diff-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.diff) === idx);
+  });
+}
+ 
+function goToStart() {
+  document.getElementById('hud').style.display = 'none';
+  showScreen('startScreen');
+}
+ 
 // =====================
 // STATE
 // =====================
@@ -305,14 +369,14 @@ let l1Words=[],l1WordIndex=0,l1WordTotal=12,l1CurrentWord=null,l1LetterIndex=0;
 let l1FallInterval=null,l1FallY=0,l1WordElem=null,l1WordStartTime=0,l1WordDropped=false;
 let l2Icons=[],l2IconIndex=0,l2IconTotal=24,l2FallingIcons=[];
 let l2SpawnInterval=null,l2FallInterval=null,dragState=null;
-
+ 
 // =====================
 // POLISH DIACRITICS
 // =====================
 const PL_DIACRITICS = new Set(['ą','ć','ę','ł','ń','ó','ś','ż','ź']);
 const PL_TO_BASE = {'ą':'a','ć':'c','ę':'e','ł':'l','ń':'n','ó':'o','ś':'s','ż':'z','ź':'z'};
 function isAltGr(e) { return e.getModifierState('AltGraph')||(e.ctrlKey&&e.altKey); }
-
+ 
 // =====================
 // INIT
 // =====================
@@ -333,13 +397,20 @@ function init() {
   }
   const best=parseInt(localStorage.getItem('supergraRekord')||'0');
   document.getElementById('bestScoreDisplay').textContent='🏆 Rekord: '+best+' pkt';
+  // Przywróć wybrany poziom trudności
+  const savedDiff = parseInt(localStorage.getItem('supergraDiff'));
+  if (!isNaN(savedDiff) && savedDiff >= 0 && savedDiff <= 4) setDiff(savedDiff);
 }
-
+ 
 // =====================
 // START / HUD
 // =====================
+let baseDiffMult = 1.0;
+ 
 function startGame(){
-  score=0;currentRound=0;speedMultiplier=1.0;
+  score=0;currentRound=0;
+  baseDiffMult = DIFF_MULT[selectedDiff];
+  speedMultiplier = baseDiffMult;
   document.getElementById('hud').style.display='flex';
   updateHUD();showScreen('level1Screen');startLevel1();
 }
@@ -352,7 +423,7 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
-
+ 
 // =====================
 // LEVEL 1
 // =====================
@@ -362,19 +433,19 @@ function startLevel1(){
   showScreen('level1Screen');updateHUD();updateProgress(0,l1WordTotal);
   document.addEventListener('keydown',onKeyDown);spawnNextWord();
 }
-
+ 
 function spawnNextWord(){
   if(l1WordIndex>=l1WordTotal){endLevel1();return;}
   const wordData=l1Words[l1WordIndex];
   l1CurrentWord=wordData;l1LetterIndex=0;l1WordDropped=false;l1FallY=0;l1WordStartTime=Date.now();
   if(l1WordElem&&l1WordElem.parentNode)l1WordElem.parentNode.removeChild(l1WordElem);
-
+ 
   const gameArea=document.getElementById('gameArea1');
   const el=document.createElement('div');el.className='falling-word';el.id='currentWord';el.style.top='0px';
-
+ 
   const emojiEl=document.createElement('span');emojiEl.className='word-emoji';emojiEl.textContent=wordData.emoji;
   el.appendChild(emojiEl);
-
+ 
   const lettersEl=document.createElement('div');lettersEl.className='word-display';
   // Słowa przechowywane i wyświetlane małymi literami
   for(const ch of wordData.word){
@@ -382,14 +453,13 @@ function spawnNextWord(){
     lettersEl.appendChild(lb);
   }
   el.appendChild(lettersEl);
-
+ 
   const hintEl=document.createElement('div');hintEl.className='altgr-hint';hintEl.id='altgrHint';
   el.appendChild(hintEl);
-
+ 
   gameArea.appendChild(el);l1WordElem=el;updateAltGrHint();
-
+ 
   if(l1FallInterval)clearInterval(l1FallInterval);
-  // −15% od 40 → 34
   const fallSpeed=34*speedMultiplier;
   const tickMs=80;
   l1FallInterval=setInterval(()=>{
@@ -411,7 +481,7 @@ function spawnNextWord(){
     }
   },tickMs);
 }
-
+ 
 function updateAltGrHint(){
   const h=document.getElementById('altgrHint');
   if(!h||!l1CurrentWord)return;
@@ -419,17 +489,17 @@ function updateAltGrHint(){
   if(ch&&PL_DIACRITICS.has(ch)){h.textContent='⌨️ Użyj Alt Gr (punkty ×2)';h.style.opacity='1';}
   else{h.textContent='';h.style.opacity='0';}
 }
-
+ 
 function onKeyDown(e){
   if(!l1CurrentWord)return;
   if(['Shift','CapsLock','Control','Alt','Meta','AltGraph'].includes(e.key))return;
-
+ 
   const key=e.key.toLowerCase();
   const word=l1CurrentWord.word;
   const expected=word[l1LetterIndex];
   const isDiac=PL_DIACRITICS.has(expected);
   let ok=false;
-
+ 
   if(isDiac){
     if(key===expected){ok=true;}                                    // przeglądarka produkuje diakrytyk
     else if(!isAltGr(e)&&PL_TO_BASE[expected]===key){return;}      // sama baza bez AltGr → ignoruj
@@ -438,19 +508,18 @@ function onKeyDown(e){
     if(isAltGr(e))return;                                           // AltGr + litera zwykła → ignoruj
     if(key===expected)ok=true;
   }
-
+ 
   const letters=l1WordElem.querySelectorAll('.letter-box');
   if(ok){
     const lb=letters[l1LetterIndex];
     lb.classList.add('correct');
     if(isDiac){
       lb.dataset.diacritic='1';
-      // Zielone pole + delikatny blask (klasa .correct już daje zielone tło)
       lb.style.boxShadow='0 0 14px #22C55E, 0 4px 0 #15803D';
       setTimeout(()=>{if(lb)lb.style.boxShadow='';},400);
     }
     l1LetterIndex++;updateAltGrHint();
-
+ 
     if(l1LetterIndex>=word.length){
       clearInterval(l1FallInterval);l1WordDropped=true;
       const timeTaken=(Date.now()-l1WordStartTime)/1000;
@@ -467,7 +536,7 @@ function onKeyDown(e){
     flashRed();playWrongSound();
   }
 }
-
+ 
 function endLevel1(){
   clearInterval(l1FallInterval);
   document.removeEventListener('keydown',onKeyDown);
@@ -475,7 +544,7 @@ function endLevel1(){
   l1CurrentWord=null;
   // advance round
   currentRound++;
-  speedMultiplier=1.0+Math.floor(currentRound/2)*0.05;
+  speedMultiplier=baseDiffMult+Math.floor(currentRound/2)*0.05;
   if(currentRound>=totalRounds){showEndScreen();return;}
   const emojis=['🎉','🌟','🦋','🚀','🎊','⭐'];
   showTransition(
@@ -485,7 +554,7 @@ function endLevel1(){
     'Następnie: Łap ikonki! 🎯 ('+Math.round(speedMultiplier*100)+'% szybkości)'
   );
 }
-
+ 
 // =====================
 // LEVEL 2
 // =====================
@@ -493,17 +562,16 @@ function startLevel2(){
   levelScore=0;l2IconIndex=0;l2Icons=shuffle([...LEVEL2_ICONS]);l2FallingIcons=[];
   showScreen('level2Screen');updateHUD();updateProgress(0,l2IconTotal);
   document.querySelectorAll('.falling-icon').forEach(e=>e.remove());
-
-  // −15%: spawn 2500→2940ms, fall 50→42.5
+ 
   const spawnDelay=Math.max(1200,Math.floor(2940/speedMultiplier));
   if(l2SpawnInterval)clearInterval(l2SpawnInterval);
   if(l2FallInterval)clearInterval(l2FallInterval);
-
+ 
   l2SpawnInterval=setInterval(()=>{
     if(l2IconIndex<l2IconTotal){spawnIcon(l2Icons[l2IconIndex%l2Icons.length]);l2IconIndex++;updateProgress(l2IconIndex,l2IconTotal);}
     else clearInterval(l2SpawnInterval);
   },spawnDelay);
-
+ 
   const fallSpeed=42.5*speedMultiplier;
   const tickMs=60;
   l2FallInterval=setInterval(()=>{
@@ -517,7 +585,7 @@ function startLevel2(){
     if(l2IconIndex>=l2IconTotal&&l2FallingIcons.length===0){clearInterval(l2FallInterval);clearInterval(l2SpawnInterval);setTimeout(endLevel2,500);}
   },tickMs);
 }
-
+ 
 function spawnIcon(iconData){
   const el=document.createElement('div');el.className='falling-icon';el.textContent=iconData.emoji;
   const ring=document.createElement('div');ring.className='icon-ring';
@@ -532,7 +600,7 @@ function spawnIcon(iconData){
   el.addEventListener('mousedown',e=>startDrag(e,ic));
   el.addEventListener('touchstart',e=>startDrag(e,ic),{passive:false});
 }
-
+ 
 function startDrag(e,iconObj){
   e.preventDefault();const t=e.touches?e.touches[0]:e;
   iconObj.dragging=true;iconObj.elem.classList.add('dragging');
@@ -543,7 +611,7 @@ document.addEventListener('mousemove',moveDrag);
 document.addEventListener('touchmove',moveDrag,{passive:false});
 document.addEventListener('mouseup',endDrag);
 document.addEventListener('touchend',endDrag);
-
+ 
 function moveDrag(e){
   if(!dragState)return;e.preventDefault();
   const t=e.touches?e.touches[0]:e;const ic=dragState.iconObj;
@@ -572,16 +640,16 @@ function isOverBasket(iEl,bEl){
   const cx=ir.left+ir.width/2,cy=ir.top+ir.height/2;
   return cx>=br.left&&cx<=br.right&&cy>=br.top&&cy<=br.bottom;
 }
-
+ 
 function endLevel2(){
   clearInterval(l2FallInterval);clearInterval(l2SpawnInterval);
   document.querySelectorAll('.falling-icon').forEach(e=>e.remove());
-  currentRound++;speedMultiplier=1.0+Math.floor(currentRound/2)*0.05;
+  currentRound++;speedMultiplier=baseDiffMult+Math.floor(currentRound/2)*0.05;
   if(currentRound>=totalRounds){showEndScreen();return;}
   const msgs=['🦋 Fantastycznie! 🦋','🌟 Rewelacja! 🌟','🚀 Mistrz! 🚀'];
   showTransition(msgs[Math.floor(Math.random()*msgs.length)],'🎯','+'+levelScore+' punktów!','Runda '+(Math.floor(currentRound/2)+1)+' — pisanie liter! 🔤');
 }
-
+ 
 // =====================
 // TRANSITIONS
 // =====================
@@ -595,7 +663,7 @@ function showTransition(title,emoji,scoreText,nextText){
 function continueGame(){
   if(currentRound%2===0)startLevel2();else startLevel1();
 }
-
+ 
 // =====================
 // END SCREEN
 // =====================
@@ -613,7 +681,7 @@ function showEndScreen(){
   }
   showScreen('endScreen');spawnConfetti(30);
 }
-
+ 
 // =====================
 // HELPERS
 // =====================
@@ -649,7 +717,7 @@ function shuffle(arr){
   for(let i=arr.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;[arr[i],arr[j]]=[arr[j],arr[i]];}
   return arr;
 }
-
+ 
 init();
 </script>
 </body>
